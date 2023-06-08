@@ -11,7 +11,6 @@ import (
 	"github.com/superops-team/hyperops/pkg/environment"
 	"github.com/superops-team/hyperops/pkg/metrics"
 	"github.com/superops-team/hyperops/pkg/ops/event"
-	"github.com/rs/zerolog/log"
 	"go.starlark.net/starlark"
 )
 
@@ -121,10 +120,7 @@ func (t *TaskManager) Add(taskid string, thread *starlark.Thread, eventsCh chan 
 		workdir = path.Join(pwdpath, thread.Name)
 	}
 	if !PathExists(workdir) {
-		err := os.MkdirAll(workdir, 0755)
-		if err != nil {
-			log.Error().Str("id", thread.Name).Err(err).Msg("mkdir failed when add task")
-		}
+		_ = os.MkdirAll(workdir, 0755)
 	}
 	_, ok := t.tasks[taskid]
 	if ok {

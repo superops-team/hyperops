@@ -14,7 +14,6 @@ import (
 	"github.com/superops-team/hyperops/pkg/ops/event"
 	"github.com/superops-team/hyperops/pkg/ops/starlib"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/sh"
-	"github.com/rs/zerolog/log"
 	"go.starlark.net/resolve"
 	"go.starlark.net/starlark"
 )
@@ -72,7 +71,7 @@ func (r *Runtime) hyperopsPrint(thread *starlark.Thread, msg string) {
 	// 统一将所有的输出记录到output，为外部提供存档记录
 	_, err := r.output.Write([]byte(safeMsg + "\n"))
 	if err != nil {
-		log.Error().Err(err)
+        fmt.Println(err.Error())
 	}
 }
 
@@ -84,8 +83,8 @@ func ExecScript(ctx context.Context, target *Target, opts ...func(o *ExecOpts)) 
 	defer func() {
 		latency := time.Since(now)
 		if r := recover(); r != nil {
-			err = fmt.Errorf("running hyperops script panic reason: %v", r)
-			log.Error().Err(err).Msg(string(debug.Stack()))
+			fmt.Println("running hyperops script panic reason: %v", r)
+            fmt.Println(string(debug.Stack()))
 		}
 		if err != nil {
 			metrics.WorkCount.WithLabelValues(target.ScriptPath, "failed").Inc()

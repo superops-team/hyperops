@@ -7,7 +7,6 @@ import (
 
 	"github.com/superops-team/hyperops/pkg/environment"
 	"github.com/superops-team/hyperops/pkg/metrics"
-	"github.com/rs/zerolog/log"
 	"go.starlark.net/starlark"
 )
 
@@ -85,7 +84,6 @@ func AddBuiltin(name string, f Function) *starlark.Builtin {
 			}
 			status := "success"
 			if err != nil {
-				log.Error().Err(err).Msg(safeMsg)
 				if !env.IsTrue(HYPEROPS_FUNC_HOOK) {
 					thread.Print(thread, safeMsg)
 				}

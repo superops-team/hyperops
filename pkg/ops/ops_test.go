@@ -13,7 +13,6 @@ import (
 	localctx "github.com/superops-team/hyperops/pkg/ops/context"
 	"github.com/superops-team/hyperops/pkg/ops/event"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/rs/zerolog/log"
 	"go.starlark.net/starlark"
 )
 
@@ -171,7 +170,7 @@ print(ctx.get_secret("password1"))
 func TestExecWithHang(t *testing.T) {
 	go func() {
 		http.Handle("/metrics", promhttp.Handler())
-		log.Error().Err(http.ListenAndServe(":8889", nil))
+        fmt.Println("listen failed")
 		//然后访问http://localhost:8889/metrics
 	}()
 	tm := localctx.NewTaskManager()
@@ -184,7 +183,7 @@ func TestExecWithHang(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	time.Sleep(10 * time.Second)
+	time.Sleep(5 * time.Second)
 	fmt.Println("hang ended")
 	err = tm.Recovery(taskid)
 	if err != nil {
