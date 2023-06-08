@@ -10,13 +10,13 @@ import (
 	"sync"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/superops-team/hyperops/pkg/environment"
 	"github.com/superops-team/hyperops/pkg/ops"
 	"github.com/superops-team/hyperops/pkg/ops/event"
 	"github.com/superops-team/hyperops/pkg/version"
-	"github.com/google/uuid"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 )
 
@@ -92,7 +92,6 @@ var applyCmd = &cobra.Command{
 	},
 }
 
-
 func ExecuteApply(target *ops.Target, jobFile string, jobName string, jobId string, jobTags string, timeout int, ctxMap map[string]interface{}) {
 	ctx := context.Background()
 	eventCh := make(chan event.Event)
@@ -134,9 +133,9 @@ func ExecuteApply(target *ops.Target, jobFile string, jobName string, jobId stri
 
 	v := version.GetVersion()
 	cfg := map[string]interface{}{
-		"job_id":             jobId,
-		"job_name":           jobName,
-		"job_tags":           jobTags,
+		"job_id":    jobId,
+		"job_name":  jobName,
+		"job_tags":  jobTags,
 		"version":   v.Version,
 		"buildtime": v.BuildTime,
 	}
@@ -166,7 +165,6 @@ func ExecuteApply(target *ops.Target, jobFile string, jobName string, jobId stri
 func init() {
 	applyCmd.PersistentFlags().StringP("file", "f", "", "ops file path, --file=/path/to/ops.star")
 	BindViper(applyCmd.PersistentFlags(), "file")
-
 
 	applyCmd.PersistentFlags().Bool("debug", false, "exec script in debug mode")
 	BindViper(applyCmd.PersistentFlags(), "debug")
