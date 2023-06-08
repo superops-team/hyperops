@@ -47,7 +47,7 @@ make build
 
 ## 更多内置包，功能介绍
 
-* shell模块执行shell系统调用
+* shell模块: 执行shell系统调用
 
 ```
 load('shell.star', 'shell')
@@ -57,7 +57,7 @@ print(res_1.code)
 print(res_1.stdout)
 print(res_1.stderr)
 
-res_3 = shell.exec("df -lh", cpu_limit_by_quota=50)
+res_3 = shell.exec("df -lh")
 print(res_3)
 res_2 = shell.exec(dir="./", cmd="pwd")
 print(res_2)
@@ -65,4 +65,51 @@ print(res_2)
 res_5 = shell.exec(dir="./", cmd="pwdss")
 print(res_5)
 
+```
+
+
+* fs模块：文件的各种操作
+
+```
+load('fs.star', 'fs')
+
+fs.create("testdata/test.txt", "1234")
+
+datafss = fs.ls()
+print(datafss)
+
+fss = fs.glob("./*")
+print(fss)
+
+eflag  = fs.exist("testdata/test.txt")
+print(eflag)
+
+content = fs.readall("testdata/test.txt")
+print(content)
+
+appendflag = fs.append("testdata/test.txt", "123")
+print(appendflag)
+
+writeflag = fs.create("testdata/test.txt", "hello,world")
+print(writeflag)
+
+stat = fs.stat("testdata/test.txt")
+print(stat)
+
+dirname = fs.dirname("testdata/test.txt")
+print(dirname)
+
+basename = fs.basename("testdata/test.txt")
+print(basename)
+
+md5sum = fs.md5("testdata/test.txt")
+print(md5sum)
+
+compressflag = fs.gzip("testdata/test.txt", "testdata/test.txt.tar.gz")
+print(compressflag)
+
+flag = fs.rm("testdata/test.txt")
+print(flag)
+rflag = fs.rm("testdata/test.txt.tar.gz")
+print(rflag)
 ```
