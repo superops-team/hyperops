@@ -1,8 +1,3 @@
-/*
-Package zipfile defines zipfileimatical functions, it's intended to be a drop-in
-subset of python's zipfile module for starlark:
-https://docs.python.org/3/library/zipfile.html
-*/
 package zipfile
 
 import (
@@ -10,41 +5,39 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
-	"sync"
 
 	"go.starlark.net/starlark"
 	"go.starlark.net/starlarkstruct"
+	localctx "github.com/superops-team/hyperops/pkg/ops/context"
+	"github.com/superops-team/hyperops/pkg/ops/util"
 )
 
-// ModuleName defines the expected name for this Module when used
-// in starlark's load() function, eg: load('zipfile.star', 'zipfile')
+const Name = "zipfile"
 const ModuleName = "zipfile.star"
 
-var (
-	once          sync.Once
-	zipfileModule starlark.StringDict
-)
-
-// LoadModule loads the zipfile module.
-// It is concurrency-safe and idempotent.
-func LoadModule() (starlark.StringDict, error) {
-	once.Do(func() {
-		zipfileModule = starlark.StringDict{
-			"ZipFile": starlark.NewBuiltin("ZipFile", newZipFile),
-		}
-	})
-	return zipfileModule, nil
+var Module = &starlarkstruct.Module{
+	Name: "zipfile",
+	Members: starlark.StringDict{
+		"new":  localctx.AddBuiltin("zipfile.new", newZipFile),
+	},
 }
+
 
 // newZipfile opens a zip archive ZipFile(file, mode='r', compression=ZIP_STORED, allowZip64=True, compresslevel=None)
 func newZipFile(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
-	var file starlark.String
-	if err := starlark.UnpackArgs("ZipFile", args, kwargs, "file", &file); err != nil {
-		return nil, err
+	params, err := util.GetParser(args, kwargs)
+	if err != nil {
+		return starlark.None, err
 	}
-
-	rdr := strings.NewReader(string(file))
-	zr, err := zip.NewReader(rdr, int64(len(file)))
+	filename, err := params.GetString(0)
+	if err != nil {
+		filename, err = params.GetStringByName("file")
+		if err != nil {
+			return starlark.None, err
+		}
+	}
+	rdr := strings.NewReader(filename)
+	zr, err := zip.NewReader(rdr, int64(len(filename)))
 	if err != nil {
 		return starlark.None, err
 	}

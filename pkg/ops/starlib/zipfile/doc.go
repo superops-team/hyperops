@@ -4,7 +4,7 @@
     zipfile reads & parses zip archives
     path: zipfile
     functions:
-      ZipFile(data)
+      new(data) -> ZipFile
         opens an archive for reading
 
     types:
@@ -13,7 +13,7 @@
         methods:
           namelist() list
             return a list of files in the archive
-          open(filename string) ZipInfo
+          open(filename string) -> ZipInfo
             open a file for reading
             params:
               filename string

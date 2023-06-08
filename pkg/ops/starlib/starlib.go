@@ -10,10 +10,10 @@ import (
 	"github.com/superops-team/hyperops/pkg/ops/starlib/encoding/json"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/encoding/yaml"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/env"
-	"github.com/superops-team/hyperops/pkg/ops/starlib/file"
+	"github.com/superops-team/hyperops/pkg/ops/starlib/fs"
+	"github.com/superops-team/hyperops/pkg/ops/starlib/zipfile"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/group"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/hash"
-	"github.com/superops-team/hyperops/pkg/ops/starlib/html"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/http"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/math"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/re"
@@ -22,7 +22,6 @@ import (
 	"github.com/superops-team/hyperops/pkg/ops/starlib/time"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/tools"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/uuid"
-	"github.com/superops-team/hyperops/pkg/ops/starlib/zipfile"
 	"go.starlark.net/starlark"
 )
 
@@ -37,10 +36,6 @@ func Loader(thread *starlark.Thread, module string) (dict starlark.StringDict, e
 		return starlark.StringDict{"gzip": gzip.Module}, nil
 	case http.ModuleName:
 		return http.LoadModule()
-	case html.ModuleName:
-		return html.LoadModule()
-	case zipfile.ModuleName:
-		return zipfile.LoadModule()
 	case re.ModuleName:
 		return re.LoadModule()
 	case base64.ModuleName:
@@ -57,6 +52,8 @@ func Loader(thread *starlark.Thread, module string) (dict starlark.StringDict, e
 		return hash.LoadModule()
 	case uuid.ModuleName:
 		return starlark.StringDict{"uuid": uuid.Module}, nil
+	case zipfile.ModuleName:
+		return starlark.StringDict{"zipfile": zipfile.Module}, nil
 	case group.ModuleName:
 		return starlark.StringDict{"group": group.Module}, nil
 	case sh.ModuleName:
@@ -65,8 +62,8 @@ func Loader(thread *starlark.Thread, module string) (dict starlark.StringDict, e
 		return starlark.StringDict{"env": env.Module}, nil
 	case sys.ModuleName:
 		return starlark.StringDict{"sys": sys.Module}, nil
-	case file.ModuleName:
-		return starlark.StringDict{"file": file.Module}, nil
+	case fs.ModuleName:
+		return starlark.StringDict{"fs": fs.Module}, nil
 	case tools.ModuleName:
 		return starlark.StringDict{"tools": tools.Module}, nil
 	case cloudevents.ModuleName:

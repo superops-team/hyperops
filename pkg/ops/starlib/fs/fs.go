@@ -1,10 +1,9 @@
-package file
+package fs
 
 import (
 	"archive/tar"
 	"compress/gzip"
 	"crypto/md5"
-	"errors"
 	"fmt"
 	"syscall"
 	"time"
@@ -17,44 +16,31 @@ import (
 
 	localctx "github.com/superops-team/hyperops/pkg/ops/context"
 	"github.com/superops-team/hyperops/pkg/ops/util"
-	"github.com/rs/zerolog/log"
 	"go.starlark.net/starlark"
 	"go.starlark.net/starlarkstruct"
 )
 
-const Name = "file"
-const ModuleName = "file.star"
+const Name = "fs"
+const ModuleName = "fs.star"
 
 var Module = &starlarkstruct.Module{
-	Name: "file",
+	Name: "fs",
 	Members: starlark.StringDict{
-		"open":     localctx.AddBuiltin("file.open", Open),
-		"readall":  localctx.AddBuiltin("file.readall", ReadAll),
-		"create":   localctx.AddBuiltin("file.create", Create),
-		"append":   localctx.AddBuiltin("file.append", Append),
-		"md5":      localctx.AddBuiltin("file.md5", Md5),
-		"gzip":     localctx.AddBuiltin("file.gzip", Gzip),
-		"exist":    localctx.AddBuiltin("file.exist", Exist),
-		"stat":     localctx.AddBuiltin("file.stat", Stat),
-		"glob":     localctx.AddBuiltin("file.glob", Glob),
-		"ls":       localctx.AddBuiltin("file.ls", Ls),
-		"basename": localctx.AddBuiltin("file.basename", Basename),
-		"dirname":  localctx.AddBuiltin("file.dirname", Dirname),
-		"rm":       localctx.AddBuiltin("file.rm", Remove),
+		"readall":  localctx.AddBuiltin("fs.readall", ReadAll),
+		"create":   localctx.AddBuiltin("fs.create", Create),
+		"append":   localctx.AddBuiltin("fs.append", Append),
+		"md5":      localctx.AddBuiltin("fs.md5", Md5),
+		"gzip":     localctx.AddBuiltin("fs.gzip", Gzip),
+		"exist":    localctx.AddBuiltin("fs.exist", Exist),
+		"stat":     localctx.AddBuiltin("fs.stat", Stat),
+		"glob":     localctx.AddBuiltin("fs.glob", Glob),
+		"ls":       localctx.AddBuiltin("fs.ls", Ls),
+		"basename": localctx.AddBuiltin("fs.basename", Basename),
+		"dirname":  localctx.AddBuiltin("fs.dirname", Dirname),
+		"rm":       localctx.AddBuiltin("fs.rm", Remove),
 	},
 }
 
-type File struct {
-	file *os.File
-}
-
-func (f *File) Struct() *starlarkstruct.Struct {
-	return starlarkstruct.FromStringDict(starlarkstruct.Default, starlark.StringDict{
-		"read":  localctx.AddBuiltin("file.read", f.Read),
-		"write": localctx.AddBuiltin("file.write", f.Write),
-		"close": localctx.AddBuiltin("file.close", f.Close),
-	})
-}
 
 func Gzip(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
 	params, err := util.GetParser(args, kwargs)
@@ -193,7 +179,7 @@ func Remove(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, k
 			flag = ""
 		}
 	}
-	if flag == "-rf" {
+	if flag == "all" {
 		err = os.RemoveAll(filePath)
 	} else {
 		err = os.Remove(filePath)
@@ -213,7 +199,7 @@ func Ls(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwarg
 	if err != nil {
 		dirPath, err = params.GetStringByName("dir")
 		if err != nil {
-			return starlark.None, err
+            dirPath = "./"
 		}
 	}
 
@@ -312,7 +298,7 @@ func Create(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, k
 	}
 	content, err := params.GetString(1)
 	if err != nil {
-		return starlark.None, err
+        content = ""
 	}
 
 	// 如果文件不存在则创建，如果已经存在则会覆盖
@@ -341,13 +327,12 @@ func ReadAll(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, 
 
 	file, err := os.Open(filePath)
 	if err != nil {
-		return starlark.Bool(false), err
+		return starlark.None, err
 	}
 	defer file.Close()
 
 	content, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Error().Str("id", thread.Name).Msg("Read File error")
 		return starlark.None, err
 	}
 	return starlark.String(string(content)), nil
@@ -400,93 +385,4 @@ func Exist(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kw
 		return starlark.Bool(false), err
 	}
 	return starlark.Bool(true), err
-}
-
-// Open TODO:完善传入的文件权限flag
-func Open(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
-	var (
-		filePath string
-		flagPy   string
-		flag     int
-		perm     os.FileMode
-		err      error
-	)
-
-	params, err := util.GetParser(args, kwargs)
-	if err != nil {
-		return starlark.None, err
-	}
-	filePath, err = params.GetString(0)
-	if err != nil {
-		return starlark.None, err
-	}
-	flagPy, err = params.GetString(1)
-	if err != nil {
-		return starlark.None, err
-	}
-	if flagPy == "r" {
-		perm = 0444
-		flag = os.O_RDONLY
-	} else if flagPy == "w" {
-		perm = 0222
-		flag = os.O_WRONLY | os.O_CREATE
-	} else if flagPy == "rw" || flagPy == "wr" {
-		perm = 0666
-		flag = os.O_RDWR | os.O_CREATE
-	} else {
-		err = errors.New("this mode is not currently supported")
-		log.Error().Str("id", thread.Name).Str("filepath", filePath).Msg("this mode is not currently supported")
-		return starlark.None, err
-	}
-
-	file, err := os.OpenFile(filePath, flag, perm)
-	if err != nil {
-		log.Error().Str("id", thread.Name).Str("filepath", filePath).Msg("Open File error")
-		return starlark.None, err
-	}
-	retFile := &File{
-		file: file,
-	}
-	return retFile.Struct(), nil
-}
-
-func (f *File) Read(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
-	content, err := ioutil.ReadAll(f.file)
-	if err != nil {
-		log.Error().Str("id", thread.Name).Msg("Read File error")
-		return starlark.None, err
-	}
-	return starlark.String(string(content)), nil
-}
-
-func (f *File) Write(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
-	var (
-		content string
-		err     error
-	)
-
-	params, err := util.GetParser(args, kwargs)
-	if err != nil {
-		return starlark.None, err
-	}
-	content, err = params.GetString(0)
-	if err != nil {
-		return starlark.None, err
-	}
-
-	_, err = io.WriteString(f.file, content) // 写入文件(字符串)
-	if err != nil {
-		log.Error().Str("id", thread.Name).Msg("Write error")
-		return starlark.None, err
-	}
-	return starlark.None, nil
-}
-
-func (f *File) Close(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
-	err := f.file.Close()
-	if err != nil {
-		log.Error().Str("id", thread.Name).Msg("file close error")
-		return starlark.None, err
-	}
-	return starlark.None, nil
 }
