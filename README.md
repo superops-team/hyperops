@@ -1,33 +1,26 @@
-# Intro
+# Hyperops介绍
 
-Hyperops is a cloudnative ops language for better ops script
+Hyperops 是面向云原生的运维自动化编程语言，其旨在简化运维编程，通过提供通用型，易于编写，高性能，可度量的运维脚本来取代shell script 和 大多数需要用yaml编排的运维场景.
 
-## Slogan
+## 背景介绍
 
-```
-Better Ops For Better Life.
-```
-
-## Features
-
-* Measurable
-
-The metrics was inside kernel and runtime, you can easily known your ops script with metrics show diagrams on grafana.
-The log was designed by ops domain with easily transfer to any log platform.
-The script can be trigger any event by the hook in the kernel.
-
-* Write once run any where
-
-The kernel was writter in golang with better performance and multiplatform supports.
-The same ops script can be run different platform like x86, arm, mac, windows etc.
-
-* Easy to use
-
-The most grammers was came from python, and it came from starlark.
-The libs in ops domain was inside the kernel.
+我编写Hyperops的宗旨是简化运维成本，在运维自动化领域提供一个更简单有效，并且可靠的运行时来简化工作，我非常喜欢python编程语言的灵活，但是使用python做跨平台我非常苦恼，我非常喜欢go语言的高效和简介以及其内置的强类型提供的更高的安全性，我非常不喜欢也不擅长使用shell来编写脚本，每次编写shell我都会求助于Google来获取shell中非常不常见的定制化编程特性，这使得我每次编写shell都非常苦恼，我特别希望有一个面向运维场景的编程语言来解决我所面临的问题，但是很遗憾并没有一个好用的编程语言能够具备我希望拥有的运维领域的特性，因此我发起了Hyperops项目。
 
 
-## How to install
+## Hyperops特性
+
+1. 执行引擎内置可度量指标，日志，事件
+
+2. 跨平台，编写一次多平台可执行
+
+3. 易于使用，大部分语法来自python，无需重新学习新的编程语言
+
+4. 内置状态管理模型，支持持久化执行过程，执行历史
+
+5. 内置安全鉴权管理控制接入功能，方便的执行审计和鉴权
+
+
+## 如何安装
 
 ```
 # step1: clone the project
@@ -46,18 +39,77 @@ make build
 ./bin/hyperops
 ```
 
-## How to use
+## 如何使用
 
-* Hello,world
-
-write a script named `hello.ops`
-
-```
-print("hello,world")
+```bash
+./bin/hyperops apply -f examples/hello_world.ops
 ```
 
-run it
+## 更多内置包，功能介绍
+
+* shell模块: 执行shell系统调用
 
 ```
-hyperops apply -f hello.ops
+load('shell.star', 'shell')
+
+res_1 = shell.exec(dir="./", cmd="ls -l", timeout=5)
+print(res_1.code)
+print(res_1.stdout)
+print(res_1.stderr)
+
+res_3 = shell.exec("df -lh")
+print(res_3)
+res_2 = shell.exec(dir="./", cmd="pwd")
+print(res_2)
+
+res_5 = shell.exec(dir="./", cmd="pwdss")
+print(res_5)
+
+```
+
+
+* fs模块：文件的各种操作
+
+```
+load('fs.star', 'fs')
+
+fs.create("testdata/test.txt", "1234")
+
+datafss = fs.ls()
+print(datafss)
+
+fss = fs.glob("./*")
+print(fss)
+
+eflag  = fs.exist("testdata/test.txt")
+print(eflag)
+
+content = fs.readall("testdata/test.txt")
+print(content)
+
+appendflag = fs.append("testdata/test.txt", "123")
+print(appendflag)
+
+writeflag = fs.create("testdata/test.txt", "hello,world")
+print(writeflag)
+
+stat = fs.stat("testdata/test.txt")
+print(stat)
+
+dirname = fs.dirname("testdata/test.txt")
+print(dirname)
+
+basename = fs.basename("testdata/test.txt")
+print(basename)
+
+md5sum = fs.md5("testdata/test.txt")
+print(md5sum)
+
+compressflag = fs.gzip("testdata/test.txt", "testdata/test.txt.tar.gz")
+print(compressflag)
+
+flag = fs.rm("testdata/test.txt")
+print(flag)
+rflag = fs.rm("testdata/test.txt.tar.gz")
+print(rflag)
 ```
