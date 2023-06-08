@@ -18,7 +18,6 @@ const ModuleName = "shell.star"
 var Module = &starlarkstruct.Module{
 	Name: "shell",
 	Members: starlark.StringDict{
-		// "exec": starlark.NewBuiltin("shell.exec", Exec),
 		"exec": starlark.NewBuiltin("shell.exec", Exec),
 	},
 }
@@ -42,27 +41,33 @@ func Exec(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwa
 	if err != nil {
 		return starlark.None, err
 	}
-	timeout, err := params.GetIntByName("timeout")
-	if err != nil || timeout == 0 {
-		timeout = 10
-	}
-	
-	dir, err := params.GetStringByName("dir")
-	if err != nil {
-		if len(thread.Name) != 0 {
-			dir = ensureWorkdir(thread.Name)
-		} else {
-			dir = "./"
-		}
-	}
+
 	cmd, err := params.GetStringByName("cmd")
 	if err != nil {
-		// 如果获取失败默认第一个参数为cmd
 		cmd, err = params.GetString(0)
 		if err != nil {
 			return starlark.None, err
 		}
 	}
+	dir, err := params.GetStringByName("dir")
+	if err != nil {
+		dir, err = params.GetString(1)
+		if err != nil {
+			if len(thread.Name) != 0 {
+				dir = ensureWorkdir(thread.Name)
+			} else {
+				dir = "./"
+			}
+		}
+	}
+	timeout, err := params.GetInt(2)
+	if err != nil {
+		timeout, err = params.GetIntByName("timeout")
+		if err != nil || timeout == 0 {
+			timeout = 100
+		}
+	}
+
 	response, err := localexec.ExecBatchCmdS(time.Duration(timeout)*time.Second, dir, cmd)
 	if response == nil && err != nil {
 		return starlark.None, err

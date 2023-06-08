@@ -47,4 +47,22 @@ make build
 
 ## 更多内置包，功能介绍
 
-TODO
+* shell模块执行shell系统调用
+
+```
+load('shell.star', 'shell')
+
+res_1 = shell.exec(dir="./", cmd="ls -l", timeout=5)
+print(res_1.code)
+print(res_1.stdout)
+print(res_1.stderr)
+
+res_3 = shell.exec("df -lh", cpu_limit_by_quota=50)
+print(res_3)
+res_2 = shell.exec(dir="./", cmd="pwd")
+print(res_2)
+
+res_5 = shell.exec(dir="./", cmd="pwdss")
+print(res_5)
+
+```
