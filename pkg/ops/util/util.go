@@ -2,9 +2,12 @@ package util
 
 import (
 	"fmt"
+	"os"
+	"path"
 	"strconv"
 	"time"
 
+	"github.com/superops-team/hyperops/pkg/environment"
 	startime "go.starlark.net/lib/time"
 	"go.starlark.net/starlark"
 	"go.starlark.net/starlarkstruct"
@@ -257,4 +260,19 @@ type Unmarshaler interface {
 type Marshaler interface {
 	// MarshalStarlark marshal a custom type to starlark object.
 	MarshalStarlark() (starlark.Value, error)
+}
+
+func EnsureWorkdir(jobid string) string {
+	env := environment.NewEnvStorage()
+	pwdpath := env.Get("PWD")
+	workdir := "./"
+	if len(pwdpath) != 0 && len(jobid) != 0 {
+		workdir = path.Join(pwdpath, jobid)
+		if _, err := os.Stat(workdir); os.IsNotExist(err) {
+			if err := os.MkdirAll(workdir, 0744); err != nil {
+				return "./"
+			}
+		}
+	}
+	return workdir
 }

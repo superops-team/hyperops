@@ -83,7 +83,7 @@ func ExecScript(ctx context.Context, target *Target, opts ...func(o *ExecOpts)) 
 	defer func() {
 		latency := time.Since(now)
 		if r := recover(); r != nil {
-            fmt.Printf("running hyperops script panic reason: %v \n  statck: %v", r, debug.Stack())
+			fmt.Printf("running hyperops script panic reason: %v \n  statck: %v", r, debug.Stack())
 		}
 		if err != nil {
 			metrics.WorkCount.WithLabelValues(target.ScriptPath, "failed").Inc()

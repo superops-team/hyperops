@@ -52,7 +52,6 @@ func TestExecRealTimeCmdNotFound(t *testing.T) {
 	fmt.Printf("res: %v\n", res)
 }
 
-
 func TestExecWithNilConfig(t *testing.T) {
 	dir := ""
 	res, err := ExecBatchCmdS(10*time.Second, dir, "sleep 1 && echo hello&&sleep 1")
