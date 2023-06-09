@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"github.com/spf13/cobra"
 	"github.com/superops-team/hyperops/pkg/environment"
 	"github.com/superops-team/hyperops/pkg/ops/starlib"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/sh"
-	"github.com/spf13/cobra"
 	"go.starlark.net/repl"
 	"go.starlark.net/starlark"
 )

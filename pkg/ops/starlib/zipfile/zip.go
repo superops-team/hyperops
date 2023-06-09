@@ -6,10 +6,10 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"go.starlark.net/starlark"
-	"go.starlark.net/starlarkstruct"
 	localctx "github.com/superops-team/hyperops/pkg/ops/context"
 	"github.com/superops-team/hyperops/pkg/ops/util"
+	"go.starlark.net/starlark"
+	"go.starlark.net/starlarkstruct"
 )
 
 const Name = "zipfile"
@@ -18,10 +18,9 @@ const ModuleName = "zipfile.star"
 var Module = &starlarkstruct.Module{
 	Name: "zipfile",
 	Members: starlark.StringDict{
-		"new":  localctx.AddBuiltin("zipfile.new", newZipFile),
+		"new": localctx.AddBuiltin("zipfile.new", newZipFile),
 	},
 }
-
 
 // newZipfile opens a zip archive ZipFile(file, mode='r', compression=ZIP_STORED, allowZip64=True, compresslevel=None)
 func newZipFile(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {

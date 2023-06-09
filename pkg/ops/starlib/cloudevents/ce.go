@@ -7,10 +7,10 @@ import (
 
 	"encoding/base64"
 
-	localctx "github.com/superops-team/hyperops/pkg/ops/context"
-	"github.com/superops-team/hyperops/pkg/ops/util"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	http "github.com/cloudevents/sdk-go/v2/protocol/http"
+	localctx "github.com/superops-team/hyperops/pkg/ops/context"
+	"github.com/superops-team/hyperops/pkg/ops/util"
 	"go.starlark.net/starlark"
 	"go.starlark.net/starlarkstruct"
 )

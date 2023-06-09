@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	localctx "github.com/superops-team/hyperops/pkg/ops/context"
 	"github.com/superops-team/hyperops/pkg/ops/event"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.starlark.net/starlark"
 )
 
@@ -170,7 +170,7 @@ print(ctx.get_secret("password1"))
 func TestExecWithHang(t *testing.T) {
 	go func() {
 		http.Handle("/metrics", promhttp.Handler())
-        fmt.Println("listen failed")
+		fmt.Println("listen failed")
 		//然后访问http://localhost:8889/metrics
 	}()
 	tm := localctx.NewTaskManager()

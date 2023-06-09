@@ -6,9 +6,9 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/mitchellh/mapstructure"
 	"github.com/superops-team/hyperops/pkg/ops/context"
 	"github.com/superops-team/hyperops/pkg/ops/util"
-	"github.com/mitchellh/mapstructure"
 	starlarkTime "go.starlark.net/lib/time"
 	"go.starlark.net/starlark"
 	"go.starlark.net/starlarkstruct"

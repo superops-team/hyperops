@@ -13,7 +13,6 @@ func TestFile(t *testing.T) {
 	thread := &starlark.Thread{Load: testdata.NewModuleLoader(Module)}
 	starlarktest.SetReporter(thread, t)
 
-
 	zipBytes, err := ioutil.ReadFile("testdata/hello_world.zip")
 	if err != nil {
 		t.Fatal(err)

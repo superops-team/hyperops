@@ -41,7 +41,6 @@ var Module = &starlarkstruct.Module{
 	},
 }
 
-
 func Gzip(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
 	params, err := util.GetParser(args, kwargs)
 	if err != nil {
@@ -199,7 +198,7 @@ func Ls(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwarg
 	if err != nil {
 		dirPath, err = params.GetStringByName("dir")
 		if err != nil {
-            dirPath = "./"
+			dirPath = "./"
 		}
 	}
 
@@ -298,7 +297,7 @@ func Create(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, k
 	}
 	content, err := params.GetString(1)
 	if err != nil {
-        content = ""
+		content = ""
 	}
 
 	// 如果文件不存在则创建，如果已经存在则会覆盖

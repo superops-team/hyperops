@@ -11,7 +11,6 @@ import (
 	"github.com/superops-team/hyperops/pkg/ops/starlib/encoding/yaml"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/env"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/fs"
-	"github.com/superops-team/hyperops/pkg/ops/starlib/zipfile"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/group"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/hash"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/http"
@@ -22,6 +21,7 @@ import (
 	"github.com/superops-team/hyperops/pkg/ops/starlib/time"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/tools"
 	"github.com/superops-team/hyperops/pkg/ops/starlib/uuid"
+	"github.com/superops-team/hyperops/pkg/ops/starlib/zipfile"
 	"go.starlark.net/starlark"
 )
 

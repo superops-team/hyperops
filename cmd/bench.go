@@ -6,11 +6,11 @@ import (
 	"os"
 	"sync"
 
-	"github.com/superops-team/hyperops/pkg/ops"
-	"github.com/superops-team/hyperops/pkg/version"
 	"github.com/gammazero/workerpool"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/superops-team/hyperops/pkg/ops"
+	"github.com/superops-team/hyperops/pkg/version"
 	"github.com/valyala/bytebufferpool"
 )
 

@@ -23,10 +23,10 @@ func NewTarget(scriptPath string) (*Target, error) {
 		ScriptPath: scriptPath,
 		ScritType:  OpsStarlark,
 	}
-		scriptContent, err := ioutil.ReadFile(scriptPath) // ByteSec: ignore FILE_OPER
-		if err != nil {
-			return nil, err
-		}
-		t.ScriptContent = scriptContent
+	scriptContent, err := ioutil.ReadFile(scriptPath) // ByteSec: ignore FILE_OPER
+	if err != nil {
+		return nil, err
+	}
+	t.ScriptContent = scriptContent
 	return t, nil
 }
