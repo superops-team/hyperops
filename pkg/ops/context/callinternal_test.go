@@ -46,7 +46,7 @@ func Run(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwar
 		}
 	}
 
-	response, err := localexec.ExecBatchCmdS(time.Duration(timeout)*time.Second, "", cmd, nil)
+	response, err := localexec.ExecBatchCmdS(time.Duration(timeout)*time.Second, "", cmd)
 	if response == nil && err != nil {
 		return starlark.None, err
 	}

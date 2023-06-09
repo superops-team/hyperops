@@ -57,11 +57,6 @@ var applyCmd = &cobra.Command{
 			jobName = jobId
 		}
 
-		logdir := viper.GetString("logdir")
-
-		if logdir != "" {
-		}
-
 		ctxConfigFile := viper.GetString("ctxconfig")
 		debugFlag := viper.GetBool("debug")
 		ctxMap := map[string]interface{}{}
@@ -183,9 +178,6 @@ func init() {
 
 	applyCmd.PersistentFlags().StringP("id", "i", "", "job id, default auto generate by uuid, eg --id=123")
 	BindViper(applyCmd.PersistentFlags(), "id")
-
-	applyCmd.PersistentFlags().StringP("logdir", "", "", "enable log to specy log dir, default is no log support")
-	BindViper(applyCmd.PersistentFlags(), "logdir")
 
 	applyCmd.PersistentFlags().StringP("timeout", "", "1000", "set the max exec time seconds, eg --timeout=100")
 	BindViper(applyCmd.PersistentFlags(), "timeout")

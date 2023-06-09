@@ -21,7 +21,7 @@ func TestInitEnvironmentVariables(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	InitEnvironmentVariables(f)
+    _ = InitEnvironmentVariables(f)
 
 	homeDir, _ := homedir.Dir()
 

@@ -15,7 +15,7 @@ var replCmd = &cobra.Command{
 	Long:  "hyperops repl",
 	Run: func(cmd *cobra.Command, args []string) {
 		env := environment.NewEnvStorage()
-		environment.InitEnvironmentVariables(env)
+		_ = environment.InitEnvironmentVariables(env)
 		Repl()
 	},
 }
