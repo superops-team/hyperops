@@ -40,25 +40,6 @@ jobs:
       - name: Set Upload URL
         id: upload_url
         run: echo "${{ steps.create_release.outputs.upload_url }}" >> $GITHUB_ENV
-      - name: get semantic tag version and release notes from commit messages
-	id: tag
-	run: |
-	  curtag=${GITHUB_REF_NAME}
-	  major_minor=$(echo "$curtag" | cut -d'.' -f1-2)
-	  patch=$(echo "$curtag" | cut -d'.' -f3)
-	  # avoid empty patch number
-	  [ -n "$patch" ] && ((patch--)) || patch=".x"
-	  prevtag="${major_minor}.${patch}"
-	  echo "" > body.log
-	  if git tag | grep $prevtag ; then
-	    git log -q ${curtag}...${prevtag} --pretty="- %s" -q --no-color >> body.log
-	  else
-	    git log --pretty="- %s" -q --no-color >> body.log
-	  fi
-	  line_count=$(cat body.log | wc -l)
-	  echo "curtag=$curtag" >> $GITHUB_OUTPUT
-	  echo "prevtag=$prevtag" >> $GITHUB_OUTPUT
-	  echo "line_count=$line_count" >> $GITHUB_OUTPUT
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
