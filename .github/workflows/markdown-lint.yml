@@ -1,0 +1,20 @@
+name: Markdown-related check
+
+on:
+  pull_request:
+    branches: "*"
+
+jobs:
+  markdown-related-check:
+    name: markdown-related check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Markdown lint
+      uses: docker://avtodev/markdown-lint:v1
+      with:
+        config: '.markdownlint.yml'
+        args: '**/*.md'
+        ignore: 'vendor .github'
