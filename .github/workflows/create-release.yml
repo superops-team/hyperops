@@ -1,46 +1,15 @@
-name: Release
-
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
+  release:
+    types: [created]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: [1.18.x]
+  release-linux-amd64:
+    name: release linux/amd64
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v2
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Build
-        run: GOOS=${{ matrix.os == 'windows-latest' && 'windows' || 'linux' }} GOARCH=amd64 go build -o hyperops_${{ matrix.os == 'windows-latest' && 'windows.exe' || 'linux' }} .
-      - name: Create Release
-        uses: actions/create-release@v1
-        id: create_release
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set Upload URL
-        id: upload_url
-        run: echo "${{ steps.create_release.outputs.upload_url }}" >> $GITHUB_ENV
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          UPLOAD_URL: ${{ steps.upload_url.outputs.upload_url }}
-        with:
-          asset_path: ./hyperops_${{ matrix.os == 'windows-latest' && 'windows.exe' || 'linux' }}
-          asset_name: hyperops_${{ matrix.os == 'windows-latest' && 'windows.exe' || 'linux' }}
-          asset_content_type: application/octet-stream
+    - uses: actions/checkout@v3
+    - uses: wangyoucao577/go-release-action@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: linux
+        goarch: amd64

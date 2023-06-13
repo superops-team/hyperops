@@ -8,7 +8,7 @@ deps:
 build:
 	@echo "  >  Building binary..."
 	@echo "  >  Use build param: ${GO_LDFLAGS}"
-	@go build -ldflags "${GO_LDFLAGS}" -o $(GOBIN)/hyperops ./main.go
+	@GOOS=linux GOARCH=amd64 go build -ldflags "${GO_LDFLAGS}" -o $(GOBIN)/hyperops_linux_amd64-$(GIT_TAG) ./main.go
 	@echo "  >  Building finish..."
 
 ## build_for_mac：build binary
