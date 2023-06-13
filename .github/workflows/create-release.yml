@@ -32,11 +32,6 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
       - name: Set Upload URL
         id: upload_url
         run: echo "${{ steps.create_release.outputs.upload_url }}" >> $GITHUB_ENV
