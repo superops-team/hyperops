@@ -1,4 +1,11 @@
-### HyperOps ———— hyperops is an easy-to-use, cloud-native, cross-platform, operations-oriented programming language.
+<p align="center">
+    <img src="https://github.com/superops-team/hyperops/blob/main/docs/hyperops-overview.jpg" class="center" />
+</p>
+
+### HyperOps
+
+> hyperops is an easy-to-use, cloud-native, cross-platform, operations-oriented programming language.
+
 ----
 
 <p align="center">
@@ -8,9 +15,9 @@
     <a href="https://github.com/avelino/awesome-go"><img src="https://awesome.re/mentioned-badge.svg"/></a>
 </p>
 
-# Intro
+## Intro
 
-Hyperops is a cloudnative ops language for better ops script
+Hyperops is a cloudnative ops language for better ops script.
 
 ## Slogan
 
