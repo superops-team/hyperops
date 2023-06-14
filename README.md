@@ -2,7 +2,6 @@
 ----
 
 <p align="center">
-    <a href="https://codecov.io/gh/superops-team/hyperops"><img src="https://codecov.io/gh/superops-team/hyperops/branch/master/graph/badge.svg"/></a>
     <a href="https://godoc.org/github.com/superops-team/hyperops"><img src="https://godoc.org/github.com/superops-team/hyperops?status.svg"/></a>
     <a href="https://github.com/superops-team/hyperops"><img src="https://img.shields.io/badge/release-v0.1.3-blue"/></a>
     <a href="https://goreportcard.com/report/github.com/superops-team/hyperops"><img src="https://goreportcard.com/badge/github.com/superops-team/hyperops"/></a>
