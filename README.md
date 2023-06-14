@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/superops-team/hyperops/blob/main/docs/hyperops-overview.jpg" class="center" />
+    <img src="https://github.com/superops-team/hyperops/blob/main/docs/hyperops-overview.png" class="center" />
 </p>
 
 ### HyperOps
